@@ -6,7 +6,6 @@ import {
   getTwitterShareUrl,
   getFacebookShareUrl,
   copyToClipboard,
-  nativeShare,
   generateShareText,
 } from '../../lib/share';
 
