@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -131,15 +132,18 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   return (
     <html lang={htmlLang} suppressHydrationWarning>
       <head>
-        {/* Google AdSense */}
-        <script
-          async
+        {/* Google AdSense - next/script 사용하여 hydration 문제 방지 */}
+        <Script
+          id="adsense"
+          strategy="afterInteractive"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8955182453510440"
           crossOrigin="anonymous"
         />
-        {/* JSON-LD 구조화 데이터 */}
-        <script
+        {/* JSON-LD 구조화 데이터 - next/script 사용 */}
+        <Script
+          id="json-ld"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>

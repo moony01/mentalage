@@ -1,70 +1,257 @@
 'use client';
 
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import clsx from 'clsx';
+import { useState } from 'react';
 
 /**
- * 외부 링크 헤더 컴포넌트 (우측 상단)
+ * Cross-Site Navigation
+ * Synced with: moony01.github.io/_includes/cross-site-nav.html
+ * All units in px for consistency
  */
 export default function Header() {
-  const params = useParams();
-  const locale = params.locale as string;
-  const isKo = locale === 'ko';
-
-  const links = [
-    {
-      href: 'https://moony01.com/kpopface/',
-      label: isKo ? '케이팝 얼굴상 테스트' : 'K-Pop Face Test',
-      icon: (
-        <Image
-          src="/mentalage/images/k-logo.svg"
-          alt="K-Pop Logo"
-          width={24}
-          height={24}
-          className="rounded-sm"
-        />
-      ),
-      primary: true,
-    },
-    {
-      href: 'https://moony01.com/',
-      label: isKo ? '블로그' : 'Tech Blog',
-      icon: <span className="text-lg">📝</span>,
-      primary: false,
-    },
-  ];
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <header className="fixed top-4 right-4 z-50 flex flex-col sm:flex-row gap-3 items-end sm:items-center">
-      {links.map((link) => (
-        <a
-          key={link.href}
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={clsx(
-            'flex items-center gap-2 px-3 py-2 rounded-full shadow-md transition-all duration-300',
-            'backdrop-blur-md hover:scale-105 hover:shadow-xl',
-            link.primary
-              ? 'bg-gradient-to-r from-violet-600/90 to-fuchsia-600/90 text-white hover:from-violet-600 hover:to-fuchsia-600'
-              : 'bg-white/80 text-gray-700 hover:bg-white hover:text-black',
-          )}
+    <>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+      />
+
+      <header className={`cross-site-header ${collapsed ? 'collapsed' : ''}`}>
+        {/* 토글 버튼 */}
+        <button
+          type="button"
+          className="cross-site-link cross-site-toggle"
+          onClick={() => setCollapsed(!collapsed)}
+          aria-label="메뉴 토글"
         >
-          {link.icon}
-          <span className="text-sm font-bold whitespace-nowrap hidden sm:inline-block">
-            {link.label}
-          </span>
-          <span
-            className={clsx(
-              'text-xs font-bold sm:hidden',
-              link.primary ? 'inline-block' : 'hidden',
-            )}
+          <span className="link-icon toggle-open">☰</span>
+          <span className="link-icon toggle-close">✕</span>
+        </button>
+
+        {/* 링크들 */}
+        <div className="cross-site-links">
+          {/* Plozen Blog */}
+          <a
+            href="/"
+            className="cross-site-link"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {isKo ? '케이팝 테스트' : 'K-Pop Test'}
-          </span>
-        </a>
-      ))}
-    </header>
+            <span className="link-icon">
+              <img
+                src="/mentalage/images/blog-logo.svg"
+                width={28}
+                height={28}
+                alt="Plozen Blog"
+              />
+            </span>
+            <span className="link-label">Plozen Blog</span>
+            <span className="link-label-mobile"></span>
+          </a>
+
+          {/* K-Pop Face Test */}
+          <a
+            href="/kpopface/"
+            className="cross-site-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="link-icon">
+              <img
+                src="/mentalage/images/kft-logo.svg"
+                width={28}
+                height={28}
+                alt="K-Pop Face Test"
+              />
+            </span>
+            <span className="link-label">K-Pop Face Test</span>
+            <span className="link-label-mobile"></span>
+          </a>
+
+          {/* Mental Age Test (현재 사이트 - Primary) */}
+          <a href="/" className="cross-site-link primary">
+            <span className="link-icon">🧠</span>
+            <span className="link-label">Mental Age Test</span>
+            <span className="link-label-mobile">Mental</span>
+          </a>
+
+          {/* KCL (출시 전 - hidden) */}
+          <a
+            href="#"
+            className="cross-site-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'none' }}
+          >
+            <span className="link-icon">
+              <img
+                src="/mentalage/images/kcl-logo.svg"
+                width={28}
+                height={28}
+                alt="K-Pop Company League"
+              />
+            </span>
+            <span className="link-label">K-Pop Company League</span>
+            <span className="link-label-mobile"></span>
+          </a>
+        </div>
+      </header>
+
+      <style jsx global>{`
+        /**
+         * Cross-Site Navigation - All px units
+         */
+
+        .cross-site-header {
+          position: fixed;
+          top: 16px;
+          right: 16px;
+          z-index: 50;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          align-items: flex-end;
+          font-family: 'Pretendard Variable', Pretendard, -apple-system,
+            BlinkMacSystemFont, system-ui, sans-serif;
+          font-size: 16px;
+        }
+
+        .cross-site-links {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          align-items: flex-end;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cross-site-header.collapsed .cross-site-links {
+          opacity: 0;
+          transform: translateY(-10px);
+          pointer-events: none;
+          max-height: 0;
+          gap: 0;
+          overflow: hidden;
+        }
+
+        .cross-site-header:not(.collapsed) .cross-site-links {
+          opacity: 1;
+          transform: translateY(0);
+          max-height: 500px;
+        }
+
+        .cross-site-link {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 18px;
+          border-radius: 9999px;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+            0 2px 4px -2px rgb(0 0 0 / 0.1);
+          transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          text-decoration: none !important;
+          cursor: pointer;
+          border: none;
+          background: rgba(255, 255, 255, 0.8);
+          color: #374151 !important;
+        }
+
+        .cross-site-link:hover {
+          transform: scale(1.05);
+          box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 8px 10px -6px rgb(0 0 0 / 0.1);
+          background: rgba(255, 255, 255, 1);
+          color: #000000 !important;
+        }
+
+        .cross-site-link.primary {
+          background: linear-gradient(
+            to right,
+            rgba(124, 58, 237, 0.9),
+            rgba(192, 38, 211, 0.9)
+          );
+          color: white !important;
+        }
+
+        .cross-site-link.primary:hover {
+          background: linear-gradient(to right, #7c3aed, #c026d3);
+          color: white !important;
+        }
+
+        .link-icon {
+          font-size: 28px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .link-icon svg,
+        .link-icon img {
+          width: 28px;
+          height: 28px;
+          border-radius: 4px;
+        }
+
+        .link-label {
+          font-size: 14px;
+          font-weight: 700;
+          white-space: nowrap;
+          display: none;
+        }
+
+        .link-label-mobile {
+          font-size: 16px;
+          font-weight: 700;
+          white-space: nowrap;
+          display: inline-block;
+        }
+
+        .cross-site-link:not(.primary) .link-label-mobile {
+          display: none;
+        }
+
+        @media (min-width: 640px) {
+          .link-label {
+            display: inline-block;
+          }
+          .link-label-mobile {
+            display: none;
+          }
+        }
+
+        .cross-site-toggle {
+          width: 48px;
+          height: 48px;
+          padding: 0;
+          justify-content: center;
+        }
+
+        .cross-site-toggle .link-icon {
+          font-size: 24px;
+        }
+
+        .toggle-close {
+          display: none;
+        }
+        .cross-site-header.collapsed .toggle-open {
+          display: none;
+        }
+        .cross-site-header.collapsed .toggle-close {
+          display: inline-block;
+        }
+
+        .cross-site-link:active {
+          transform: scale(0.98);
+        }
+
+        .cross-site-link:focus-visible {
+          outline: 2px solid #8b5cf6;
+          outline-offset: 2px;
+        }
+      `}</style>
+    </>
   );
 }
