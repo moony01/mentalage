@@ -32,19 +32,9 @@ export default function Header() {
         {/* 링크들 */}
         <div className="cross-site-links">
           {/* Plozen Blog */}
-          <a
-            href="/"
-            className="cross-site-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="/" className="cross-site-link" target="_blank" rel="noopener noreferrer">
             <span className="link-icon">
-              <img
-                src="/mentalage/images/blog-logo.svg"
-                width={28}
-                height={28}
-                alt="Plozen Blog"
-              />
+              <img src="/mentalage/images/blog-logo.svg" width={28} height={28} alt="Plozen Blog" />
             </span>
             <span className="link-label">Plozen Blog</span>
             <span className="link-label-mobile"></span>
@@ -112,8 +102,13 @@ export default function Header() {
           flex-direction: column;
           gap: 14px;
           align-items: flex-end;
-          font-family: 'Pretendard Variable', Pretendard, -apple-system,
-            BlinkMacSystemFont, system-ui, sans-serif;
+          font-family:
+            'Pretendard Variable',
+            Pretendard,
+            -apple-system,
+            BlinkMacSystemFont,
+            system-ui,
+            sans-serif;
           font-size: 16px;
         }
 
@@ -146,7 +141,8 @@ export default function Header() {
           gap: 10px;
           padding: 10px 18px;
           border-radius: 9999px;
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          box-shadow:
+            0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
           transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
           backdrop-filter: blur(12px);
@@ -160,18 +156,15 @@ export default function Header() {
 
         .cross-site-link:hover {
           transform: scale(1.05);
-          box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          box-shadow:
+            0 20px 25px -5px rgb(0 0 0 / 0.1),
             0 8px 10px -6px rgb(0 0 0 / 0.1);
           background: rgba(255, 255, 255, 1);
           color: #000000 !important;
         }
 
         .cross-site-link.primary {
-          background: linear-gradient(
-            to right,
-            rgba(124, 58, 237, 0.9),
-            rgba(192, 38, 211, 0.9)
-          );
+          background: linear-gradient(to right, rgba(124, 58, 237, 0.9), rgba(192, 38, 211, 0.9));
           color: white !important;
         }
 
@@ -233,14 +226,20 @@ export default function Header() {
           font-size: 24px;
         }
 
-        .toggle-close {
+        /* 기본 상태 (메뉴 펼쳐짐): 닫기 버튼 표시 */
+        .toggle-open {
           display: none;
         }
+        .toggle-close {
+          display: inline-block;
+        }
+
+        /* collapsed 상태 (메뉴 접힘): 햄버거 메뉴 표시 */
         .cross-site-header.collapsed .toggle-open {
-          display: none;
+          display: inline-block;
         }
         .cross-site-header.collapsed .toggle-close {
-          display: inline-block;
+          display: none;
         }
 
         .cross-site-link:active {
