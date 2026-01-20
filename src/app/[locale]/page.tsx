@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useQuiz } from '@/hooks/useQuiz';
 import Button from '@/components/ui/Button';
 import HomeButton from '@/components/ui/HomeButton';
-import Header from '@/components/layout/Header';
+import PageLayout from '@/components/layout/PageLayout';
 import QuestionCard from '@/components/quiz/QuestionCard';
 import ResultCard from '@/components/result/ResultCard';
 import AdBanner from '@/components/layout/AdBanner';
@@ -68,8 +68,7 @@ export default function Home() {
   // 1. Landing Screen
   if (!isStarted) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center pt-24 pb-6 px-6 bg-background animate-fade-in text-center">
-        <Header />
+      <PageLayout className="animate-fade-in text-center">
         <div className="max-w-md w-full space-y-8">
           {/* 언어 선택 플래그 바 */}
           <LanguageSwitcher currentLocale={currentLocale} />
@@ -90,19 +89,16 @@ export default function Home() {
           >
             {t('home.startButton')}
           </Button>
-
-          <AdBanner className="mt-8" />
         </div>
-      </main>
+      </PageLayout>
     );
   }
 
   // 2. Age Input Screen
   if (isStarted && realAge === null) {
     return (
-      <main className="relative flex min-h-screen flex-col items-center justify-center pt-24 pb-6 px-6 bg-background animate-slide-in">
+      <PageLayout className="animate-slide-in">
         <HomeButton onClick={reset} />
-        <Header />
 
         <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl space-y-6 text-center">
           <h2 className="text-2xl font-bold text-gray-800">{t('home.ageInput')}</h2>
@@ -129,7 +125,7 @@ export default function Home() {
             </Button>
           </form>
         </div>
-      </main>
+      </PageLayout>
     );
   }
 
@@ -142,9 +138,8 @@ export default function Home() {
     }));
 
     return (
-      <main className="relative flex min-h-screen flex-col items-center justify-center pt-24 pb-4 px-4 bg-background">
+      <PageLayout>
         <HomeButton onClick={reset} />
-        <Header />
 
         <QuestionCard
           question={questionText}
@@ -154,9 +149,9 @@ export default function Home() {
           onAnswer={handleAnswer}
         />
 
-        {/* 5문제마다 광고 표시 */}
-        {(currentIndex + 1) % 5 === 0 && <AdBanner className="mt-6" />}
-      </main>
+        {/* 5문제마다 추가 광고 표시 */}
+        {(currentIndex + 1) % 5 === 0 && <AdBanner className="mt-6 max-w-md w-full" />}
+      </PageLayout>
     );
   }
 
@@ -167,11 +162,8 @@ export default function Home() {
     const description = tResults(`${resultKey}.description`);
 
     return (
-      <main className="relative flex min-h-screen flex-col items-center justify-center pt-24 pb-10 px-4 bg-background">
+      <PageLayout showTopAd>
         <HomeButton onClick={reset} />
-        <Header />
-
-        <AdBanner className="mb-6" />
 
         <ResultCard
           result={result}
@@ -180,9 +172,7 @@ export default function Home() {
           onRestart={reset}
           shareUrl={shareUrl}
         />
-
-        <AdBanner className="mt-6" />
-      </main>
+      </PageLayout>
     );
   }
 
