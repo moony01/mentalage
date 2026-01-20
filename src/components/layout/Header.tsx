@@ -66,13 +66,12 @@ export default function Header() {
             <span className="link-label-mobile">Mental</span>
           </a>
 
-          {/* KCL (출시 전 - hidden) */}
+          {/* KCL */}
           <a
-            href="#"
+            href="https://kclhq.com/"
             className="cross-site-link"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: 'none' }}
           >
             <span className="link-icon">
               <img
