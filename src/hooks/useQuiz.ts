@@ -1,7 +1,16 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Question, Answer, QuizResult } from '@/types';
 import { generateQuizResult } from '@/lib/calculate';
 import questionsData from '@/data/questions.json';
+
+/** sessionStorage 키 */
+const STORAGE_KEY = 'mentalage-result';
+
+/** 저장할 결과 데이터 타입 */
+interface SavedResult {
+  result: QuizResult;
+  realAge: number;
+}
 
 interface UseQuizReturn {
   // State
@@ -31,6 +40,24 @@ export function useQuiz(): UseQuizReturn {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [result, setResult] = useState<QuizResult | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
+
+  // 페이지 로드 시 sessionStorage에서 결과 복원
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const saved = sessionStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const data: SavedResult = JSON.parse(saved);
+        setResult(data.result);
+        setRealAgeState(data.realAge);
+        setIsCompleted(true);
+        setIsStarted(true);
+      }
+    } catch (e) {
+      console.error('Failed to restore result from sessionStorage:', e);
+    }
+  }, []);
 
   const questions = questionsData.questions as unknown as Question[];
   const totalQuestions = questions.length;
@@ -72,6 +99,17 @@ export function useQuiz(): UseQuizReturn {
         if (realAge !== null) {
           const finalResult = generateQuizResult(newAnswers, realAge);
           setResult(finalResult);
+
+          // 결과를 sessionStorage에 저장 (새로고침 시 유지)
+          try {
+            const dataToSave: SavedResult = {
+              result: finalResult,
+              realAge,
+            };
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+          } catch (e) {
+            console.error('Failed to save result to sessionStorage:', e);
+          }
         }
       }
     },
@@ -85,6 +123,13 @@ export function useQuiz(): UseQuizReturn {
     setAnswers([]);
     setResult(null);
     setIsCompleted(false);
+
+    // sessionStorage 삭제
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+      console.error('Failed to remove result from sessionStorage:', e);
+    }
   }, []);
 
   return {
