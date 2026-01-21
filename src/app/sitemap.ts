@@ -4,7 +4,7 @@ import { locales } from '@/i18n/config';
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://moony01.com/mentalage';
+  const baseUrl = 'https://moony01.github.io/mentalage';
 
   return locales.map((locale) => ({
     url: `${baseUrl}/${locale}`,

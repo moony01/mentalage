@@ -84,6 +84,29 @@ export default function ResultCard({
             Test Again
           </Button>
         </div>
+
+        {/* 크로스 프로모션 - 다른 테스트 유도 */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <p className="text-gray-500 text-sm mb-3">👇 Try other tests too!</p>
+          <div className="flex gap-2 justify-center flex-wrap">
+            <a
+              href="https://moony01.github.io/kpopface/"
+              className="px-3 py-1.5 bg-pink-100 text-pink-700 rounded-full text-sm font-medium hover:bg-pink-200 transition-all active:scale-95"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              🎤 K-Pop Face Test
+            </a>
+            <a
+              href="https://kclhq.com/"
+              className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium hover:bg-purple-200 transition-all active:scale-95"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              🏆 K-Pop Company League
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

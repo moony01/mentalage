@@ -92,11 +92,15 @@ export async function generateMetadata({
     metadataBase: new URL(siteOrigin),
     alternates: {
       canonical: `${baseUrl}/${locale}`,
-      languages: Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}`])),
+      languages: {
+        ...Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}`])),
+        'x-default': `${baseUrl}/en`,
+      },
     },
     openGraph: {
       title: titles[locale] || titles.en,
       description: descriptions[locale] || descriptions.en,
+      url: `${baseUrl}/${locale}`,
       type: 'website',
       locale: locale,
       siteName: 'Mental Age Test',
@@ -135,30 +139,58 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const htmlLang = localeHtmlLang[locale as Locale] || locale;
 
   return (
-    <html lang={htmlLang} suppressHydrationWarning>
-      <head>
-        {/* Google AdSense - next/script 사용하여 hydration 문제 방지 */}
-        <Script
-          id="adsense"
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8955182453510440"
-          crossOrigin="anonymous"
-        />
-        {/* JSON-LD 구조화 데이터 - next/script 사용 */}
-        <Script
-          id="json-ld"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
-      <body className="min-h-screen bg-gradient-to-br from-surface to-white">
+    <>
+      {/* Kakao SDK */}
+      <Script
+        id="kakao-sdk"
+        strategy="afterInteractive"
+        src="https://developers.kakao.com/sdk/js/kakao.min.js"
+      />
+      {/* Kakao SDK 초기화 */}
+      <Script
+        id="kakao-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function initKakao() {
+              if (typeof Kakao !== 'undefined' && !Kakao.isInitialized()) {
+                Kakao.init('8329cd81f78ef956d4487f90e5a4cd49');
+              } else if (typeof Kakao === 'undefined') {
+                setTimeout(initKakao, 100);
+              }
+            })();
+          `,
+        }}
+      />
+      {/* Google AdSense */}
+      <Script
+        id="adsense"
+        strategy="afterInteractive"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8955182453510440"
+        crossOrigin="anonymous"
+      />
+      {/* JSON-LD 구조화 데이터 */}
+      <Script
+        id="json-ld"
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {/* lang 속성 동적 설정 */}
+      <Script
+        id="set-lang"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.lang="${htmlLang}";`,
+        }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-surface to-white">
         <NextIntlClientProvider messages={messages}>
           <main className="flex min-h-screen flex-col items-center justify-center p-4">
             {children}
           </main>
         </NextIntlClientProvider>
-      </body>
-    </html>
+      </div>
+    </>
   );
 }
