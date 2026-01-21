@@ -37,7 +37,7 @@ const descriptions: Record<string, string> = {
   tr: 'Eğlenceli sorulara cevap verin ve gerçek zihinsel yaşınızı keşfedin! Sonuçları arkadaşlarınızla paylaşın.',
 };
 
-const baseUrl = 'https://moony01.com/mentalage';
+const baseUrl = 'https://moony01.github.io/mentalage';
 
 /**
  * JSON-LD 구조화 데이터 생성 (Quiz 스키마)
