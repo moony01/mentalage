@@ -37,6 +37,11 @@ const descriptions: Record<string, string> = {
   tr: 'Eğlenceli sorulara cevap verin ve gerçek zihinsel yaşınızı keşfedin! Sonuçları arkadaşlarınızla paylaşın.',
 };
 
+/**
+ * metadataBase는 basePath 없이 설정 (Next.js가 자동 추가)
+ * 단, canonical/alternates 등에는 전체 URL 사용
+ */
+const siteOrigin = 'https://moony01.github.io';
 const baseUrl = 'https://moony01.github.io/mentalage';
 
 /**
@@ -84,7 +89,7 @@ export async function generateMetadata({
     title: titles[locale] || titles.en,
     description: descriptions[locale] || descriptions.en,
     keywords: ['mental age test', '정신연령 테스트', 'quiz', '테스트', 'viral'],
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(siteOrigin),
     alternates: {
       canonical: `${baseUrl}/${locale}`,
       languages: Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}`])),
