@@ -84,6 +84,25 @@ export default function Header() {
             <span className="link-label">K-Pop Company League</span>
             <span className="link-label-mobile"></span>
           </a>
+
+          {/* 상견례 얼굴상 테스트 */}
+          <a
+            href="/sanggyeonrye-test/"
+            className="cross-site-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="link-icon">
+              <img
+                src="/mentalage/images/sgt-logo.svg"
+                width={28}
+                height={28}
+                alt="상견례 얼굴상 테스트"
+              />
+            </span>
+            <span className="link-label">상견례 얼굴상 테스트</span>
+            <span className="link-label-mobile"></span>
+          </a>
         </div>
       </header>
 
