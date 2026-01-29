@@ -89,7 +89,14 @@ export default function Header() {
           title={tooltipMessage}
           data-tooltip={tooltipMessage}
         >
-          <span className="pig-tail-arrow"></span>
+          <span className="pig-tail-arrow">
+            <svg viewBox="0 0 45 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* 돼지꼬리: 위로 올라갔다가 아래로 */}
+              <path d="M2 30 Q2 5, 25 5 Q40 5, 40 20 L40 45" stroke="#dc2626" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              {/* 화살표 머리 */}
+              <path d="M34 40 L40 52 L46 40" stroke="#dc2626" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
           <span className="link-icon toggle-open">☰</span>
           <span className="link-icon toggle-close">✕</span>
         </button>
@@ -394,42 +401,22 @@ export default function Header() {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* 돼지꼬리 화살표 - 곡선 + 화살표 머리 */
+        /* 돼지꼬리 화살표 - SVG로 완벽한 곡선 */
         .pig-tail-arrow {
           position: absolute;
-          right: calc(100% + 8px);
-          top: -25px;
-          width: 35px;
-          height: 45px;
+          right: 45px;
+          top: -30px;
+          width: 45px;
+          height: 55px;
           opacity: 0;
           visibility: hidden;
           transition: all 0.3s ease;
           pointer-events: none;
         }
 
-        .pig-tail-arrow::before {
-          content: "";
-          position: absolute;
-          right: 0;
-          top: 10px;
-          width: 25px;
-          height: 35px;
-          border: 3px solid #dc2626;
-          border-left: none;
-          border-bottom: none;
-          border-radius: 0 18px 0 0;
-        }
-
-        .pig-tail-arrow::after {
-          content: "";
-          position: absolute;
-          left: 3px;
-          bottom: 0;
-          width: 0;
-          height: 0;
-          border-left: 7px solid transparent;
-          border-right: 7px solid transparent;
-          border-top: 12px solid #dc2626;
+        .pig-tail-arrow svg {
+          width: 100%;
+          height: 100%;
         }
 
         .cross-site-toggle.show-tooltip .pig-tail-arrow {
