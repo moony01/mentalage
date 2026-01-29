@@ -2,19 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-const STORAGE_KEY = 'crossSiteNavSeen';
-const SCROLL_THRESHOLD = 50;
+const AUTO_COLLAPSE_DELAY = 3000; // 3초 후 자동 접힘
 
 /**
  * Cross-Site Navigation
  * Synced with: moony01.github.io/_includes/cross-site-nav.html
  * All units in px for consistency
+ *
+ * mentalage 전용: 풀스크린이라 스크롤 대신 3초 후 자동 접힘
  */
 export default function Header() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [animationClass, setAnimationClass] = useState('');
   const [showPulse, setShowPulse] = useState(false);
-  const lastScrollY = useRef(0);
   const initialized = useRef(false);
 
   // 토글 함수 (bounce 애니메이션 포함)
@@ -29,50 +29,26 @@ export default function Header() {
     }, 400);
   };
 
-  // 초기화 및 스크롤 이벤트
+  // 초기화: 항상 첫 방문자 UX (메뉴 펼침 + pulse + 3초 후 자동 접힘)
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
 
-    const hasSeenMenu = localStorage.getItem(STORAGE_KEY) === 'true';
+    // pulse 효과
+    setTimeout(() => {
+      setShowPulse(true);
+      setTimeout(() => setShowPulse(false), 1500);
+    }, 500);
 
-    if (hasSeenMenu) {
-      // 이미 본 사용자: 바로 접힌 상태
-      setIsCollapsed(true);
-    } else {
-      // 첫 방문자: 메뉴 펼쳐진 상태 + pulse 효과
-      setTimeout(() => {
-        setShowPulse(true);
-        setTimeout(() => setShowPulse(false), 1500);
-      }, 500);
-    }
-
-    // 스크롤 감지
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // 아래로 스크롤 + threshold 초과
-      if (currentScrollY > lastScrollY.current && currentScrollY > SCROLL_THRESHOLD) {
-        if (!isCollapsed) {
-          toggleMenu(true);
-          localStorage.setItem(STORAGE_KEY, 'true');
-        }
-      }
-
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isCollapsed]);
+    // 3초 후 자동 접힘
+    setTimeout(() => {
+      toggleMenu(true);
+    }, AUTO_COLLAPSE_DELAY);
+  }, []);
 
   // 토글 버튼 클릭 핸들러
   const handleToggleClick = () => {
     toggleMenu(!isCollapsed);
-    localStorage.setItem(STORAGE_KEY, 'true');
   };
 
   const headerClass = `cross-site-header ${isCollapsed ? 'collapsed' : ''} ${animationClass}`;
