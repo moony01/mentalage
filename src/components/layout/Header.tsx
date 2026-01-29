@@ -1,8 +1,19 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 
 const AUTO_COLLAPSE_DELAY = 3000; // 3초 후 자동 접힘
+
+// 다국어 툴팁 메시지
+const TOOLTIP_MESSAGES: Record<string, string> = {
+  ko: '버튼을 클릭해서 다른 테스트를 체험해보세요',
+  en: 'Click to explore other tests and apps',
+  ja: 'クリックして他のテストを体験してください',
+  zh: '点击体验其他测试和应用',
+  vi: 'Nhấp để khám phá các bài test khác',
+  id: 'Klik untuk menjelajahi tes lainnya',
+};
 
 /**
  * Cross-Site Navigation
@@ -12,9 +23,14 @@ const AUTO_COLLAPSE_DELAY = 3000; // 3초 후 자동 접힘
  * mentalage 전용: 풀스크린이라 스크롤 대신 3초 후 자동 접힘
  */
 export default function Header() {
+  const params = useParams();
+  const locale = (params?.locale as string) || 'ko';
+  const tooltipMessage = TOOLTIP_MESSAGES[locale] || TOOLTIP_MESSAGES['en'];
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [animationClass, setAnimationClass] = useState('');
   const [showPulse, setShowPulse] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const initialized = useRef(false);
 
   // 토글 함수 (bounce 애니메이션 포함)
@@ -26,6 +42,7 @@ export default function Header() {
     setTimeout(() => {
       setAnimationClass('');
       setIsCollapsed(collapse);
+      setShowTooltip(collapse);
     }, 400);
   };
 
@@ -53,6 +70,7 @@ export default function Header() {
 
   const headerClass = `cross-site-header ${isCollapsed ? 'collapsed' : ''} ${animationClass}`;
   const primaryClass = `cross-site-link primary ${showPulse ? 'pulse-once' : ''}`;
+  const toggleClass = `cross-site-link cross-site-toggle ${showTooltip ? 'show-tooltip' : ''}`;
 
   return (
     <>
@@ -65,9 +83,11 @@ export default function Header() {
         {/* 토글 버튼 */}
         <button
           type="button"
-          className="cross-site-link cross-site-toggle"
+          className={toggleClass}
           onClick={handleToggleClick}
           aria-label="메뉴 토글"
+          title={tooltipMessage}
+          data-tooltip={tooltipMessage}
         >
           <span className="link-icon toggle-open">☰</span>
           <span className="link-icon toggle-close">✕</span>
@@ -345,6 +365,82 @@ export default function Header() {
         .cross-site-link:focus-visible {
           outline: 2px solid #8b5cf6;
           outline-offset: 2px;
+        }
+
+        /* 툴팁 스타일 */
+        .cross-site-toggle {
+          position: relative;
+        }
+
+        .cross-site-toggle::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          right: 56px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.85);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 500;
+          white-space: nowrap;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+          pointer-events: none;
+          z-index: 100;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .cross-site-toggle::before {
+          content: "";
+          position: absolute;
+          right: 52px;
+          top: 50%;
+          transform: translateY(-50%);
+          border: 6px solid transparent;
+          border-left-color: rgba(0, 0, 0, 0.85);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+          pointer-events: none;
+        }
+
+        .cross-site-toggle.show-tooltip::after,
+        .cross-site-toggle.show-tooltip::before {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        /* 툴팁 애니메이션 */
+        @keyframes tooltipPulse {
+          0%, 100% { transform: translateY(-50%) scale(1); }
+          50% { transform: translateY(-50%) scale(1.02); }
+        }
+
+        .cross-site-toggle.show-tooltip::after {
+          animation: tooltipPulse 2s ease-in-out infinite;
+        }
+
+        /* 모바일에서 툴팁 위치 조정 */
+        @media (max-width: 400px) {
+          .cross-site-toggle::after {
+            right: auto;
+            left: 50%;
+            top: 56px;
+            transform: translateX(-50%);
+            max-width: 200px;
+            white-space: normal;
+            text-align: center;
+          }
+
+          .cross-site-toggle::before {
+            right: auto;
+            left: 50%;
+            top: 48px;
+            transform: translateX(-50%) rotate(90deg);
+          }
         }
       `}</style>
     </>
