@@ -1,6 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+const STORAGE_KEY = 'crossSiteNavSeen';
+const SCROLL_THRESHOLD = 50;
 
 /**
  * Cross-Site Navigation
@@ -8,7 +11,72 @@ import { useState } from 'react';
  * All units in px for consistency
  */
 export default function Header() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [animationClass, setAnimationClass] = useState('');
+  const [showPulse, setShowPulse] = useState(false);
+  const lastScrollY = useRef(0);
+  const initialized = useRef(false);
+
+  // 토글 함수 (bounce 애니메이션 포함)
+  const toggleMenu = (collapse: boolean) => {
+    if (collapse === isCollapsed) return;
+
+    setAnimationClass(collapse ? 'collapsing' : 'expanding');
+
+    setTimeout(() => {
+      setAnimationClass('');
+      setIsCollapsed(collapse);
+    }, 400);
+  };
+
+  // 초기화 및 스크롤 이벤트
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const hasSeenMenu = localStorage.getItem(STORAGE_KEY) === 'true';
+
+    if (hasSeenMenu) {
+      // 이미 본 사용자: 바로 접힌 상태
+      setIsCollapsed(true);
+    } else {
+      // 첫 방문자: 메뉴 펼쳐진 상태 + pulse 효과
+      setTimeout(() => {
+        setShowPulse(true);
+        setTimeout(() => setShowPulse(false), 1500);
+      }, 500);
+    }
+
+    // 스크롤 감지
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // 아래로 스크롤 + threshold 초과
+      if (currentScrollY > lastScrollY.current && currentScrollY > SCROLL_THRESHOLD) {
+        if (!isCollapsed) {
+          toggleMenu(true);
+          localStorage.setItem(STORAGE_KEY, 'true');
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isCollapsed]);
+
+  // 토글 버튼 클릭 핸들러
+  const handleToggleClick = () => {
+    toggleMenu(!isCollapsed);
+    localStorage.setItem(STORAGE_KEY, 'true');
+  };
+
+  const headerClass = `cross-site-header ${isCollapsed ? 'collapsed' : ''} ${animationClass}`;
+  const primaryClass = `cross-site-link primary ${showPulse ? 'pulse-once' : ''}`;
 
   return (
     <>
@@ -17,12 +85,12 @@ export default function Header() {
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
       />
 
-      <header className={`cross-site-header ${collapsed ? 'collapsed' : ''}`}>
+      <header className={headerClass}>
         {/* 토글 버튼 */}
         <button
           type="button"
           className="cross-site-link cross-site-toggle"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={handleToggleClick}
           aria-label="메뉴 토글"
         >
           <span className="link-icon toggle-open">☰</span>
@@ -60,7 +128,7 @@ export default function Header() {
           </a>
 
           {/* Mental Age Test (현재 사이트 - Primary) */}
-          <a href="/" className="cross-site-link primary">
+          <a href="/" className={primaryClass}>
             <span className="link-icon">🧠</span>
             <span className="link-label">Mental Age Test</span>
             <span className="link-label-mobile">Mental</span>
@@ -135,7 +203,7 @@ export default function Header() {
           flex-direction: column;
           gap: 4px;
           align-items: flex-end;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .cross-site-header.collapsed .cross-site-links {
@@ -151,6 +219,40 @@ export default function Header() {
           opacity: 1;
           transform: translateY(0);
           max-height: 500px;
+        }
+
+        /* Bounce 효과를 위한 애니메이션 */
+        @keyframes bounceCollapse {
+          0% { transform: translateY(0); opacity: 1; }
+          50% { transform: translateY(-15px); opacity: 0.5; }
+          75% { transform: translateY(-5px); opacity: 0.2; }
+          100% { transform: translateY(-10px); opacity: 0; }
+        }
+
+        @keyframes bounceExpand {
+          0% { transform: translateY(-10px); opacity: 0; }
+          50% { transform: translateY(5px); opacity: 0.8; }
+          75% { transform: translateY(-2px); opacity: 0.9; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .cross-site-header.collapsing .cross-site-links {
+          animation: bounceCollapse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .cross-site-header.expanding .cross-site-links {
+          animation: bounceExpand 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Primary 메뉴 Pulse 효과 */
+        @keyframes primaryPulse {
+          0% { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 0 rgba(124, 58, 237, 0.7); }
+          50% { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 12px rgba(124, 58, 237, 0); }
+          100% { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 0 rgba(124, 58, 237, 0); }
+        }
+
+        .cross-site-link.primary.pulse-once {
+          animation: primaryPulse 1.5s ease-out;
         }
 
         .cross-site-link {
