@@ -169,6 +169,24 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8955182453510440"
         crossOrigin="anonymous"
       />
+      {/* Google Analytics */}
+      <Script
+        id="ga-script"
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=G-J7NNCSLXY2"
+      />
+      <Script
+        id="ga-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-J7NNCSLXY2');
+          `,
+        }}
+      />
       {/* JSON-LD 구조화 데이터 */}
       <Script
         id="json-ld"
