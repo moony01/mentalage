@@ -90,7 +90,7 @@ export function shareKakao(title: string, description: string, url: string): boo
   // Kakao SDK가 초기화되어 있으면 SDK 사용 (친구 선택 창 팝업)
   if (kakao?.Link) {
     try {
-      const baseUrl = 'https://moony01.github.io/mentalage';
+      const baseUrl = 'https://moony01.com/mentalage';
       kakao.Link.sendDefault({
         objectType: 'feed',
         content: {

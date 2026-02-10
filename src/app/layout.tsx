@@ -4,7 +4,7 @@ import type { Metadata, Viewport } from 'next';
 /**
  * 사이트 기본 URL
  */
-const siteUrl = 'https://moony01.github.io/mentalage';
+const siteUrl = 'https://moony01.com/mentalage';
 
 /**
  * 기본 메타데이터 (루트 레벨) - SEO 필수!
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     'Fun quiz to discover your real mental age! Answer interesting questions and share results with friends. 재미있는 질문에 답하고 당신의 정신연령을 알아보세요!',
   keywords: ['mental age test', '정신연령 테스트', 'quiz', '테스트', 'viral', '심리테스트'],
-  metadataBase: new URL('https://moony01.github.io'),
+  metadataBase: new URL('https://moony01.com'),
   alternates: {
     canonical: siteUrl,
   },

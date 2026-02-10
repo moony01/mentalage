@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://moony01.github.io/mentalage/sitemap.xml',
+    sitemap: 'https://moony01.com/mentalage/sitemap.xml',
   };
 }

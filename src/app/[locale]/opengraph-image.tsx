@@ -122,7 +122,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
             color: 'rgba(255,255,255,0.7)',
           }}
         >
-          moony01.github.io/mentalage
+          moony01.com/mentalage
         </div>
       </div>
     ),

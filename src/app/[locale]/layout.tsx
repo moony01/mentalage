@@ -41,8 +41,8 @@ const descriptions: Record<string, string> = {
  * metadataBase는 basePath 없이 설정 (Next.js가 자동 추가)
  * 단, canonical/alternates 등에는 전체 URL 사용
  */
-const siteOrigin = 'https://moony01.github.io';
-const baseUrl = 'https://moony01.github.io/mentalage';
+const siteOrigin = 'https://moony01.com';
+const baseUrl = 'https://moony01.com/mentalage';
 
 /**
  * JSON-LD 구조화 데이터 생성 (Quiz 스키마)
