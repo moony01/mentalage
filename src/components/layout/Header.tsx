@@ -1,37 +1,17 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
-
-const AUTO_COLLAPSE_DELAY = 3000; // 3초 후 자동 접힘
-
-// 다국어 툴팁 메시지
-const TOOLTIP_MESSAGES: Record<string, string> = {
-  ko: '버튼을 클릭해서 다른 테스트를 체험해보세요',
-  en: 'Click to explore other tests and apps',
-  ja: 'クリックして他のテストを体験してください',
-  zh: '点击体验其他测试和应用',
-  vi: 'Nhấp để khám phá các bài test khác',
-  id: 'Klik untuk menjelajahi tes lainnya',
-};
+import { useState } from 'react';
 
 /**
  * Cross-Site Navigation
  * Synced with: moony01.github.io/_includes/cross-site-nav.html
  * All units in px for consistency
  *
- * mentalage 전용: 풀스크린이라 스크롤 대신 3초 후 자동 접힘
+ * 초기 상태: 접힘 (햄버거 버튼만 노출)
  */
 export default function Header() {
-  const params = useParams();
-  const locale = (params?.locale as string) || 'ko';
-  const tooltipMessage = TOOLTIP_MESSAGES[locale] || TOOLTIP_MESSAGES['en'];
-
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [animationClass, setAnimationClass] = useState('');
-  const [showPulse, setShowPulse] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const initialized = useRef(false);
 
   // 토글 함수 (bounce 애니메이션 포함)
   const toggleMenu = (collapse: boolean) => {
@@ -42,26 +22,8 @@ export default function Header() {
     setTimeout(() => {
       setAnimationClass('');
       setIsCollapsed(collapse);
-      setShowTooltip(collapse);
     }, 400);
   };
-
-  // 초기화: 항상 첫 방문자 UX (메뉴 펼침 + pulse + 3초 후 자동 접힘)
-  useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    // pulse 효과
-    setTimeout(() => {
-      setShowPulse(true);
-      setTimeout(() => setShowPulse(false), 1500);
-    }, 500);
-
-    // 3초 후 자동 접힘
-    setTimeout(() => {
-      toggleMenu(true);
-    }, AUTO_COLLAPSE_DELAY);
-  }, []);
 
   // 토글 버튼 클릭 핸들러
   const handleToggleClick = () => {
@@ -69,8 +31,6 @@ export default function Header() {
   };
 
   const headerClass = `cross-site-header ${isCollapsed ? 'collapsed' : ''} ${animationClass}`;
-  const primaryClass = `cross-site-link primary ${showPulse ? 'pulse-once' : ''}`;
-  const toggleClass = `cross-site-link cross-site-toggle ${showTooltip ? 'show-tooltip' : ''}`;
 
   return (
     <>
@@ -83,11 +43,9 @@ export default function Header() {
         {/* 토글 버튼 */}
         <button
           type="button"
-          className={toggleClass}
+          className="cross-site-link cross-site-toggle"
           onClick={handleToggleClick}
           aria-label="메뉴 토글"
-          title={tooltipMessage}
-          data-tooltip={tooltipMessage}
         >
           <span className="link-icon toggle-open">☰</span>
           <span className="link-icon toggle-close">✕</span>
@@ -124,7 +82,7 @@ export default function Header() {
           </a>
 
           {/* Mental Age Test (현재 사이트 - Primary) */}
-          <a href="/" className={primaryClass}>
+          <a href="/" className="cross-site-link primary">
             <span className="link-icon">🧠</span>
             <span className="link-label">Mental Age Test</span>
             <span className="link-label-mobile">Mental</span>
@@ -238,17 +196,6 @@ export default function Header() {
 
         .cross-site-header.expanding .cross-site-links {
           animation: bounceExpand 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        /* Primary 메뉴 Pulse 효과 */
-        @keyframes primaryPulse {
-          0% { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 0 rgba(124, 58, 237, 0.7); }
-          50% { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 12px rgba(124, 58, 237, 0); }
-          100% { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 0 0 rgba(124, 58, 237, 0); }
-        }
-
-        .cross-site-link.primary.pulse-once {
-          animation: primaryPulse 1.5s ease-out;
         }
 
         .cross-site-link {
@@ -367,49 +314,6 @@ export default function Header() {
           outline-offset: 2px;
         }
 
-        /* 툴팁 스타일 */
-        .cross-site-toggle {
-          position: relative;
-        }
-
-        .cross-site-toggle::after {
-          content: attr(data-tooltip);
-          position: absolute;
-          right: 0;
-          top: 56px;
-          transform: none;
-          background: rgba(0, 0, 0, 0.85);
-          color: white;
-          padding: 10px 14px;
-          border-radius: 8px;
-          font-size: 13px;
-          font-weight: 500;
-          white-space: normal;
-          width: 120px;
-          text-align: center;
-          line-height: 1.4;
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.3s ease;
-          pointer-events: none;
-          z-index: 100;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .cross-site-toggle.show-tooltip::after {
-          opacity: 1;
-          visibility: visible;
-        }
-
-        /* 툴팁 애니메이션 */
-        @keyframes tooltipPulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.02); }
-        }
-
-        .cross-site-toggle.show-tooltip::after {
-          animation: tooltipPulse 2s ease-in-out infinite;
-        }
       `}</style>
     </>
   );
