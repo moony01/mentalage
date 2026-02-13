@@ -53,12 +53,12 @@ export default function Header() {
 
         {/* 링크들 */}
         <div className="cross-site-links">
-          {/* Plozen Blog */}
+          {/* Moony01 Studio */}
           <a href="/" className="cross-site-link" target="_blank" rel="noopener noreferrer">
             <span className="link-icon">
-              <img src="/mentalage/images/blog-logo.svg" width={28} height={28} alt="Plozen Blog" />
+              <img src="/mentalage/images/blog-logo.svg" width={28} height={28} alt="Moony01 Studio" />
             </span>
-            <span className="link-label">Plozen Blog</span>
+            <span className="link-label">Moony01 Studio</span>
             <span className="link-label-mobile"></span>
           </a>
 
