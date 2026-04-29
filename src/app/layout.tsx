@@ -11,18 +11,18 @@ const siteUrl = 'https://moony01.com/mentalage';
  * Google이 /mentalage/ 를 크롤링할 때 이 메타데이터가 표시됨
  */
 export const metadata: Metadata = {
-  title: 'Mental Age Test - 정신연령 테스트',
+  title: 'Mental Age Test - How Old Is Your Mind? Free Quiz | 정신연령 테스트',
   description:
-    'Fun quiz to discover your real mental age! Answer interesting questions and share results with friends. 재미있는 질문에 답하고 당신의 정신연령을 알아보세요!',
+    'Take this free mental age quiz to discover how old your mind really is! Answer fun questions and share your results with friends. 재미있는 질문에 답하고 당신의 정신연령을 알아보세요!',
   keywords: ['mental age test', '정신연령 테스트', 'quiz', '테스트', 'viral', '심리테스트'],
   metadataBase: new URL('https://moony01.com'),
   alternates: {
     canonical: siteUrl,
   },
   openGraph: {
-    title: 'Mental Age Test - 정신연령 테스트',
+    title: 'Mental Age Test - How Old Is Your Mind? Free Quiz | 정신연령 테스트',
     description:
-      'Fun quiz to discover your real mental age! Answer interesting questions and share results with friends.',
+      'Take this free mental age quiz to discover how old your mind really is! Answer fun questions and share your results with friends.',
     url: siteUrl,
     siteName: 'Mental Age Test',
     type: 'website',
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mental Age Test - 정신연령 테스트',
+    title: 'Mental Age Test - How Old Is Your Mind? Free Quiz | 정신연령 테스트',
     description:
-      'Fun quiz to discover your real mental age! Answer interesting questions and share results with friends.',
+      'Take this free mental age quiz to discover how old your mind really is! Answer fun questions and share your results with friends.',
     images: [`${siteUrl}/en/opengraph-image`],
   },
   robots: {
