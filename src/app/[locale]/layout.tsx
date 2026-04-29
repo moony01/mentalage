@@ -45,26 +45,23 @@ const siteOrigin = 'https://moony01.com';
 const baseUrl = 'https://moony01.com/mentalage';
 
 /**
- * JSON-LD 구조화 데이터 생성 (Quiz 스키마)
+ * JSON-LD 구조화 데이터 생성 (WebApplication 스키마)
  */
 function generateJsonLd(locale: string) {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Quiz',
+    '@type': 'WebApplication',
     name: titles[locale] || titles.en,
     description: descriptions[locale] || descriptions.en,
     url: `${baseUrl}/${locale}`,
-    inLanguage: localeHtmlLang[locale as Locale] || locale,
-    educationalLevel: 'beginner',
-    provider: {
-      '@type': 'Organization',
-      name: 'Mental Age Test',
-      url: baseUrl,
+    applicationCategory: 'Entertainment',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
     },
-    about: {
-      '@type': 'Thing',
-      name: 'Mental Age',
-    },
+    inLanguage: locales.map((l) => localeHtmlLang[l] || l),
   };
 }
 
